@@ -12,7 +12,7 @@ namespace Services.Run.Core.ValueObjects
         public int Radius { get; }
         public bool Completed { get; private set; }
         public Location? Location { get; private set; }
-        public Guid? Next { get; }
+        public Guid? Next { get; private set; }
 
         public Point(Guid id, int order, decimal latitude, decimal longitude, int radius,
             bool completed, Location? location, Guid? next)
@@ -38,6 +38,8 @@ namespace Services.Run.Core.ValueObjects
             Completed = true;
             Location = location;
         }
+
+        public void SetNext(Guid id) => Next = id;
         
         public bool Equals(Point other)
         {

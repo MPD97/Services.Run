@@ -48,17 +48,20 @@ namespace Services.Run.Core.Entities
             EndTime = endTime;
         }
 
-        public void UpdateLocation(Location location)
+        public bool IsAbleToUpdate()
         {
             if (Status != Status.Started)
-            {
-                throw new InvalidRunStatusException(Status);
-            }
+                return false;
 
             if (PointToComplete.HasValue == false)
-            {
-                throw new InvalidNextPointToCompleteException();
-            }
+                return false;
+
+            return true;
+        }
+        public void UpdateLocation(Location location)
+        {
+            if (IsAbleToUpdate() == false)
+                throw new RunNotChangeableException(Id);
 
             var point = PointToComplete.Value;
             point.Complete(location);
@@ -70,6 +73,15 @@ namespace Services.Run.Core.Entities
             }
             
             AddEvent(new PointCompleted(point));
+        }
+        public void CancelRun()
+        {
+            if (Status != Status.Started)
+            {
+                throw new InvalidRunStatusException(Status);
+            }
+
+            AddEvent(new RunCancelled(this));
         }
     }
 }
