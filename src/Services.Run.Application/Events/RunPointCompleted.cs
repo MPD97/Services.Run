@@ -4,14 +4,12 @@ using Convey.CQRS.Events;
 namespace Services.Run.Application.Events
 {
     [Contract]
-    public class RunPointStatusCompleted: IEvent
+    public class RunPointCompleted: IEvent
     {
-        public Guid RunId { get; }
         public Guid PointId { get; }
         
-        public RunPointStatusCompleted(Guid runId, Guid pointId)
+        public RunPointCompleted( Guid pointId)
         {
-            RunId = runId;
             PointId = pointId;
         }
     }
