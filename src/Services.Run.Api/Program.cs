@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Convey;
 using Convey.Logging;
 using Convey.Secrets.Vault;
@@ -10,6 +11,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Run.Application;
+using Services.Run.Application.Commands;
+using Services.Run.Application.DTO;
+using Services.Run.Application.Queries;
 using Services.Run.Infrastructure;
 
 namespace Services.Run.Api
@@ -31,7 +35,11 @@ namespace Services.Run.Api
                 .Configure(app => app
                     .UseInfrastructure()
                     .UseDispatcherEndpoints(endpoints => endpoints
-                        .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))))
+                        .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
+                        .Get<GetRun, RunDto>("runs/{runId}")
+                        .Get<GetRuns, IEnumerable<RunDto>>("runs")
+                        .Post<CreateRun>("run",
+                            afterDispatch: (cmd, ctx) => ctx.Response.Created($"runs/{cmd.RunId}"))))
                 .UseLogging()
                 .UseVault();
     }
