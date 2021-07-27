@@ -32,6 +32,7 @@ using Services.Run.Application;
 using Services.Run.Application.Commands;
 using Services.Run.Application.Events.External;
 using Services.Run.Application.Services;
+using Services.Run.Application.Services.Route;
 using Services.Run.Core.Repositories;
 using Services.Run.Infrastructure.Contexts;
 using Services.Run.Infrastructure.Decorators;
@@ -40,6 +41,7 @@ using Services.Run.Infrastructure.Logging;
 using Services.Run.Infrastructure.Mongo.Documents;
 using Services.Run.Infrastructure.Mongo.Repositories;
 using Services.Run.Infrastructure.Services;
+using Services.Run.Infrastructure.Services.Route;
 
 namespace Services.Run.Infrastructure
 {
@@ -52,6 +54,7 @@ namespace Services.Run.Infrastructure
             builder.Services.AddTransient<IUserRepository, UserMongoRepository>();
             builder.Services.AddTransient<IRunRepository, RunMongoRepository>();
             builder.Services.AddTransient<IUserRepository, UserMongoRepository>();
+            builder.Services.AddTransient<IRouteServiceClient, RouteServiceClient>();
             builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
             builder.Services.AddSingleton<IDistanceMeasure, DistanceMesure>();
             builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
