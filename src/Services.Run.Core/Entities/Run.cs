@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Services.Run.Core.Events;
 using Services.Run.Core.Exceptions;
-using Services.Run.Core.ValueObjects;
 
 namespace Services.Run.Core.Entities
 {
     public class Run: AggregateRoot
     {
         private ISet<Point> _points = new HashSet<Point>();
-        
         public Guid UserId { get; private set; }
         public Guid RouteId { get; private set; }
         public Status Status { get; private set; }
@@ -23,21 +21,9 @@ namespace Services.Run.Core.Entities
 
         public TimeSpan? Time => EndTime.HasValue ? EndTime.Value - StartTime : null;
 
-        public Point? PointToComplete
-        {
-            get
-            { 
-                var notCompletedPoints = Points.Where(p => p.Completed == false).ToArray();
-                if (notCompletedPoints.Length == 0)
-                    return null;
-                var minOrder = notCompletedPoints.Min(p => p.Order);
-                var point = Points.Where(p => p.Completed == false).
-                   SingleOrDefault(p => p.Order == minOrder);
-                return point;
-            }
-        }
+        public Point PointToComplete { get; private set; }
 
-        public Run(Guid id, Guid userId, Guid routeId, Status status, IEnumerable<Point> points, DateTime startTime, DateTime? endTime)
+        public Run(AggregateId id, Guid userId, Guid routeId, Status status, IEnumerable<Point> points, DateTime startTime, DateTime? endTime)
         {
             Id = id;
             UserId = userId;
@@ -46,14 +32,29 @@ namespace Services.Run.Core.Entities
             Points = points;
             StartTime = startTime;
             EndTime = endTime;
+            SetPointToComplete();
         }
 
+        private void SetPointToComplete()
+        {
+            var notCompletedPoints = Points.Where(p => p.Completed == false).ToArray();
+            if (notCompletedPoints.Length == 0)
+            {
+                PointToComplete = null;
+                return;
+            }
+
+            var minOrder = notCompletedPoints.Min(p => p.Order);
+            var point = Points.Where(p => p.Completed == false).
+                SingleOrDefault(p => p.Order == minOrder);
+            PointToComplete = point;
+        }
         public bool IsAbleToUpdate()
         {
             if (Status != Status.Started)
                 return false;
 
-            if (PointToComplete.HasValue == false)
+            if (PointToComplete is null)
                 return false;
 
             return true;
@@ -63,9 +64,10 @@ namespace Services.Run.Core.Entities
             if (IsAbleToUpdate() == false)
                 throw new RunNotChangeableException(Id);
 
-            var point = PointToComplete.Value;
+            var point = PointToComplete;
             point.Complete(location);
-            if (PointToComplete.HasValue == false)
+            SetPointToComplete();
+            if (PointToComplete is null)
             {
                 Status = Status.Completed;
                 EndTime = location.CompletedAt;
@@ -80,6 +82,7 @@ namespace Services.Run.Core.Entities
             {
                 throw new InvalidRunStatusException(Status);
             }
+            Status = Status.Cancelled;
 
             AddEvent(new RunCancelled(this));
         }
