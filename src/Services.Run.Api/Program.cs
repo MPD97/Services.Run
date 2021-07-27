@@ -38,7 +38,7 @@ namespace Services.Run.Api
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
                         .Get<GetRun, RunDto>("runs/{runId}")
                         .Get<GetRuns, IEnumerable<RunDto>>("runs")
-                        .Post<CreateRun>("run",
+                        .Post<CreateRun>("runs",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"runs/{cmd.RunId}"))))
                 .UseLogging()
                 .UseVault();
