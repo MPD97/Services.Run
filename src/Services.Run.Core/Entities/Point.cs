@@ -1,21 +1,21 @@
 ﻿using System;
 using Services.Run.Core.Exceptions;
 
-namespace Services.Run.Core.ValueObjects
+namespace Services.Run.Core.Entities
 {
-    public struct Point: IEquatable<Point>
+    public class Point
     {
-        public Guid Id { get; }
+        public AggregateId Id { get; }
         public int Order { get; }
         public decimal Latitude { get; }
         public decimal Longitude { get; }
         public int Radius { get; }
         public bool Completed { get; private set; }
-        public Location? Location { get; private set; }
+        public Location Location { get; private set; }
         public Guid? Next { get; private set; }
 
-        public Point(Guid id, int order, decimal latitude, decimal longitude, int radius,
-            bool completed, Location? location, Guid? next)
+        public Point(AggregateId id, int order, decimal latitude, decimal longitude, int radius,
+            bool completed, Location location, Guid? next)
         {
             Id = id;
             Order = order < 0 ? throw new InvalidPointOrderException(order) : order;
@@ -40,30 +40,5 @@ namespace Services.Run.Core.ValueObjects
         }
 
         public void SetNext(Guid id) => Next = id;
-        
-        public bool Equals(Point other)
-        {
-            return Id.Equals(other.Id) && Order == other.Order && Latitude == other.Latitude && Longitude == other.Longitude && Radius == other.Radius;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is Point other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Order, Latitude, Longitude, Radius);
-        }
-
-        public static bool operator ==(Point left, Point right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Point left, Point right)
-        {
-            return !left.Equals(right);
-        }
     }
 }

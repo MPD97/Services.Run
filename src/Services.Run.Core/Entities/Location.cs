@@ -1,17 +1,17 @@
 ﻿using System;
 using Services.Run.Core.Exceptions;
 
-namespace Services.Run.Core.ValueObjects
+namespace Services.Run.Core.Entities
 {
-    public struct Location : IEquatable<Location>
+    public class Location
     {
-        public Guid Id { get; }
+        public AggregateId Id { get; }
         public decimal Latitude { get; }
         public decimal Longitude { get; }
         public int Accuracy { get;  }
         public DateTime CompletedAt { get; }
 
-        public Location(Guid id, decimal latitude, decimal longitude, int accuracy, DateTime completedAt)
+        public Location(AggregateId id, decimal latitude, decimal longitude, int accuracy, DateTime completedAt)
         {
             Id = id == Guid.Empty ? throw new InvalidLocationIdException() : id;
             Latitude = IsValidLatitude(latitude) ? latitude : throw new InvalidLatitudeException(latitude);
@@ -26,30 +26,6 @@ namespace Services.Run.Core.ValueObjects
             => longitude is >= -180m and <= 180m;
         public static bool IsValidAccuracy(int accuracy)
             => accuracy is >= 0 and <= 100;
-
-        public bool Equals(Location other)
-        {
-            return Id.Equals(other.Id) && Latitude == other.Latitude && Longitude == other.Longitude && Accuracy == other.Accuracy && CompletedAt.Equals(other.CompletedAt);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is Location other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, Latitude, Longitude, Accuracy, CompletedAt);
-        }
-
-        public static bool operator ==(Location left, Location right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Location left, Location right)
-        {
-            return !left.Equals(right);
-        }
+        
     }
 }
