@@ -12,5 +12,15 @@ namespace Services.Run.Application.Commands
         public decimal Latitude { get; }
         public decimal Longitude { get; }
         public decimal Accuracy { get; }
+
+        public CreateRun(Guid runId, Guid routeId, Guid userId, decimal latitude, decimal longitude, decimal accuracy)
+        {
+            RunId = runId;
+            RouteId = routeId;
+            UserId = userId;
+            Latitude = latitude;
+            Longitude = longitude;
+            Accuracy = accuracy;
+        }
     }
 }

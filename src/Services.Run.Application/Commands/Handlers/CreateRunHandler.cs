@@ -9,7 +9,6 @@ using Services.Run.Application.Services;
 using Services.Run.Application.Services.Route;
 using Services.Run.Core.Entities;
 using Services.Run.Core.Repositories;
-using Services.Run.Core.ValueObjects;
 
 namespace Services.Run.Application.Commands.Handlers
 {
@@ -54,7 +53,7 @@ namespace Services.Run.Application.Commands.Handlers
             
             if (routeStatus != RouteStatus.Accepted)
                 throw new RouteStatusIsNotAcceptedException(routeStatus);
-
+            
             var sortedPoints = new SortedSet<Point>(new ByOrderExtension());
             foreach (var point in route.Points)
             {
