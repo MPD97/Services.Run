@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Services.Run.Core.ValueObjects;
+using Services.Run.Core.Entities;
 
 namespace Services.Run.Application
 {
