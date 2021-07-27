@@ -4,7 +4,6 @@ using Convey.CQRS.Events;
 using Services.Run.Application.Services;
 using Services.Run.Core.Entities;
 using Services.Run.Core.Repositories;
-using Services.Run.Core.ValueObjects;
 
 namespace Services.Run.Application.Events.External.Handlers
 {
@@ -41,16 +40,18 @@ namespace Services.Run.Application.Events.External.Handlers
             if(run.IsAbleToUpdate() == false)
                 return;
 
-            var pointToComplete = run.PointToComplete.Value;
+            var pointToComplete = run.PointToComplete;
             var distance = _distanceMeasure.GetDistanceBetween(pointToComplete.Latitude, 
                 pointToComplete.Longitude,@event.Latitude, @event.Longitude);
 
-            if (pointToComplete.Radius > distance)
+            if ((int)distance > pointToComplete.Radius)
                 return;
 
             run.UpdateLocation(new Location(@event.LocationId, @event.Latitude,
                 @event.Longitude, @event.Accuracy, @event.CreatedAt));
 
+            await _runRepository.UpdateAsync(run);
+            
             var events = _eventMapper.MapAll(run.Events);
             await _messageBroker.PublishAsync(events);
         }
