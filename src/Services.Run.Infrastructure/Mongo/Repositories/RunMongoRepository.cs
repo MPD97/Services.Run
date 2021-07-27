@@ -23,11 +23,12 @@ namespace Services.Run.Infrastructure.Mongo.Repositories
             return run?.AsEntity();
         }
 
-        public async Task<Core.Entities.Run> GetActiveRunByUserId(Guid id)
+        public async Task<Core.Entities.Run> GetActiveRunByUserId(Guid userId)
         {
-            var run = await _repository.GetAsync(r => r.Id == id && r.Status == Status.Started);
+            var run = await _repository.GetAsync(r => r.UserId == userId && r.Status == Status.Started);
     
-            return run?.AsEntity();        }
+            return run?.AsEntity();
+        }
 
         public async Task AddAsync(Core.Entities.Run run)
             => await _repository.AddAsync(run.AsDocument());
