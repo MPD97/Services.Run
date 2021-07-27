@@ -14,7 +14,7 @@ namespace Services.Run.Infrastructure.Mongo.Documents
         public IEnumerable<PointDocument> Points { get; set;}
         public DateTime StartTime { get; set; }
         public DateTime? EndTime { get; set; }
-        public TimeSpan? Time => EndTime.HasValue ? EndTime.Value - StartTime : null;
+        public TimeSpan? Time { get; set; }
         public PointDocument PointToComplete { get; set; }
 
         public RunDocument()
@@ -22,7 +22,8 @@ namespace Services.Run.Infrastructure.Mongo.Documents
             
         }
 
-        public RunDocument(Guid id, Guid userId, Guid routeId, Status status, IEnumerable<PointDocument> points, DateTime startTime, DateTime? endTime, PointDocument pointToComplete)
+        public RunDocument(Guid id, Guid userId, Guid routeId, Status status, IEnumerable<PointDocument> points,
+            DateTime startTime, DateTime? endTime, TimeSpan? time, PointDocument pointToComplete)
         {
             Id = id;
             UserId = userId;
@@ -31,6 +32,7 @@ namespace Services.Run.Infrastructure.Mongo.Documents
             Points = points;
             StartTime = startTime;
             EndTime = endTime;
+            Time = time;
             PointToComplete = pointToComplete;
         }
     }
