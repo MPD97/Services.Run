@@ -5,7 +5,6 @@ namespace Services.Run.Core.Entities
         Unknown,
         Valid,
         Incomplete,
-        Suspicious,
         Locked
     }
 }

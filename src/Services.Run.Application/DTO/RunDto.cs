@@ -10,7 +10,7 @@ namespace Services.Run.Application.DTO
         public Guid RouteId { get; set; }
         public string Status { get; set; }
         public IEnumerable<PointDto> Points { get; set; }
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public TimeSpan? Time { get; set; }
 
@@ -18,7 +18,7 @@ namespace Services.Run.Application.DTO
         {
         }
 
-        public RunDto(Guid Id, Guid userId, Guid routeId, string status, IEnumerable<PointDto> points, DateTime startTime, DateTime? endTime, TimeSpan? time)
+        public RunDto(Guid Id, Guid userId, Guid routeId, string status, IEnumerable<PointDto> points, DateTime? startTime, DateTime? endTime, TimeSpan? time)
         {
             Id = Id;
             UserId = userId;

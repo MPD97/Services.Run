@@ -25,8 +25,9 @@ namespace Services.Run.Infrastructure.Mongo.Repositories
 
             return user?.AsEntity();
         }
-
-        public Task AddAsync(User user) => _repository.AddAsync(user.AsDocument());
-        public Task UpdateAsync(User user) => _repository.UpdateAsync(user.AsDocument());
+        public async Task AddAsync(User user) 
+            => await _repository.AddAsync(user.AsDocument());
+        public async Task UpdateAsync(User user) 
+            => await _repository.UpdateAsync(user.AsDocument());
     }
 }

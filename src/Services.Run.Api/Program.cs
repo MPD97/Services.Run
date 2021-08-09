@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Convey;
+using Convey.CQRS.Queries;
 using Convey.Logging;
 using Convey.Secrets.Vault;
 using Convey.Types;
@@ -37,7 +38,7 @@ namespace Services.Run.Api
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
                         .Get<GetRun, RunDto>("runs/{runId}")
-                        .Get<GetRuns, IEnumerable<RunDto>>("runs")
+                        .Get<SearchRanking, PagedResult<RankingDto>>("runs")
                         .Post<CreateRun>("runs",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"runs/{cmd.RunId}"))))
                 .UseLogging()

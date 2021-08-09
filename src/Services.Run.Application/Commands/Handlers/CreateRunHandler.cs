@@ -88,7 +88,7 @@ namespace Services.Run.Application.Commands.Handlers
             }
             
             var run = new Core.Entities.Run(command.RunId, user.Id, route.Id, Status.Started, sortedPoints,
-                _dateTimeProvider.Now, null);
+                null, null);
 
             await _runRepository.AddAsync(run);
             await _messageBroker.PublishAsync(new RunCreated(run.Id, run.Status.ToString()));

@@ -8,11 +8,12 @@ namespace Services.Run.Application.Events
     {
         public Guid RunId { get; }
         public Guid UserId { get; }
-        
-        public RunCompleted(Guid runId, Guid userId)
+        public Guid RouteId { get; }
+        public RunCompleted(Guid runId, Guid userId, Guid routeId)
         {
             RunId = runId;
             UserId = userId;
+            RouteId = routeId;
         }
     }
 }

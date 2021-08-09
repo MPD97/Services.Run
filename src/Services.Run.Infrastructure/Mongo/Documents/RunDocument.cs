@@ -12,7 +12,7 @@ namespace Services.Run.Infrastructure.Mongo.Documents
         public Guid RouteId { get; set; }
         public Status Status { get; set; }
         public IEnumerable<PointDocument> Points { get; set;}
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
         public TimeSpan? Time { get; set; }
         public PointDocument PointToComplete { get; set; }
@@ -23,7 +23,7 @@ namespace Services.Run.Infrastructure.Mongo.Documents
         }
 
         public RunDocument(Guid id, Guid userId, Guid routeId, Status status, IEnumerable<PointDocument> points,
-            DateTime startTime, DateTime? endTime, TimeSpan? time, PointDocument pointToComplete)
+            DateTime? startTime, DateTime? endTime, TimeSpan? time, PointDocument pointToComplete)
         {
             Id = id;
             UserId = userId;

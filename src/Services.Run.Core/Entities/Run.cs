@@ -16,14 +16,14 @@ namespace Services.Run.Core.Entities
             get => _points;
             private set => _points = new HashSet<Point>(value); 
         }
-        public DateTime StartTime { get; private set; }
+        public DateTime? StartTime { get; private set; }
         public DateTime? EndTime { get; private set; }
 
         public TimeSpan? Time => EndTime.HasValue ? EndTime.Value - StartTime : null;
 
         public Point PointToComplete { get; private set; }
 
-        public Run(AggregateId id, Guid userId, Guid routeId, Status status, IEnumerable<Point> points, DateTime startTime, DateTime? endTime)
+        public Run(AggregateId id, Guid userId, Guid routeId, Status status, IEnumerable<Point> points, DateTime? startTime, DateTime? endTime)
         {
             Id = id;
             UserId = userId;
@@ -64,6 +64,8 @@ namespace Services.Run.Core.Entities
             if (IsAbleToUpdate() == false)
                 throw new RunNotChangeableException(Id);
 
+            StartTime ??= location.CompletedAt;
+            
             var point = PointToComplete;
             point.Complete(location);
             SetPointToComplete();

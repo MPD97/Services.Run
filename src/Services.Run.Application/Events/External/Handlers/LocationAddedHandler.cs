@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Convey.CQRS.Events;
+using Microsoft.Extensions.Logging;
 using Services.Run.Application.Services;
 using Services.Run.Core.Entities;
 using Services.Run.Core.Repositories;
@@ -14,14 +15,16 @@ namespace Services.Run.Application.Events.External.Handlers
         private readonly IDistanceMeasure _distanceMeasure;
         private readonly IEventMapper _eventMapper;
         private readonly IMessageBroker _messageBroker;
+        private readonly ILogger<LocationAddedHandler> _logger;
 
-        public LocationAddedHandler(IUserRepository userRepository, IRunRepository runRepository, IDistanceMeasure distanceMeasure, IEventMapper eventMapper, IMessageBroker messageBroker)
+        public LocationAddedHandler(IUserRepository userRepository, IRunRepository runRepository, IDistanceMeasure distanceMeasure, IEventMapper eventMapper, IMessageBroker messageBroker, ILogger<LocationAddedHandler> logger)
         {
             _userRepository = userRepository;
             _runRepository = runRepository;
             _distanceMeasure = distanceMeasure;
             _eventMapper = eventMapper;
             _messageBroker = messageBroker;
+            _logger = logger;
         }
 
         public async Task HandleAsync(LocationAdded @event)
