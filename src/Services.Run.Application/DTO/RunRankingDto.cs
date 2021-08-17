@@ -2,13 +2,13 @@
 
 namespace Services.Run.Application.DTO
 {
-    public class RankingDto
+    public class RunRankingDto
     {
         public Guid UserId { get; }
-        public DateTime? RunDate { get; }
-        public TimeSpan? Time { get; }
+        public DateTime RunDate { get; }
+        public TimeSpan Time { get; }
 
-        public RankingDto(Guid userId, DateTime? runDate, TimeSpan? time)
+        public RunRankingDto(Guid userId, DateTime runDate, TimeSpan time)
         {
             UserId = userId;
             RunDate = runDate;

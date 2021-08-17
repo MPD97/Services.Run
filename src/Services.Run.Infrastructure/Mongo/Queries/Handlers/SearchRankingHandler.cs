@@ -10,7 +10,7 @@ using Services.Run.Infrastructure.Mongo.Documents;
 
 namespace Services.Run.Infrastructure.Mongo.Queries.Handlers
 {
-    public class SearchRankingHandler: IQueryHandler<SearchRanking, PagedResult<RankingDto>>
+    public class SearchRankingHandler: IQueryHandler<SearchRanking, PagedResult<RunRankingDto>>
     {
         private readonly IMongoRepository<RunDocument, Guid> _repository;
 
@@ -19,7 +19,7 @@ namespace Services.Run.Infrastructure.Mongo.Queries.Handlers
             _repository = repository;
         }
 
-        public async Task<PagedResult<RankingDto>> HandleAsync(SearchRanking query)
+        public async Task<PagedResult<RunRankingDto>> HandleAsync(SearchRanking query)
         {
             Expression<Func<RunDocument, bool>> predicate = r => r.RouteId == query.RouteId 
                 && r.Status == Status.Completed;
@@ -33,7 +33,7 @@ namespace Services.Run.Infrastructure.Mongo.Queries.Handlers
             }
 
             var pagedResult = await _repository.BrowseAsync(predicate, query);
-            return pagedResult?.Map(d => new RankingDto(d.UserId, d.EndTime.Value, d.Time.Value));        
+            return pagedResult?.Map(d => new RunRankingDto(d.UserId, d.EndTime.Value, d.Time.Value));        
         }
     }
 }

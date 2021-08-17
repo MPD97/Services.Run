@@ -38,7 +38,7 @@ namespace Services.Run.Api
                     .UseDispatcherEndpoints(endpoints => endpoints
                         .Get("", ctx => ctx.Response.WriteAsync(ctx.RequestServices.GetService<AppOptions>().Name))
                         .Get<GetRun, RunDto>("runs/{runId}")
-                        .Get<SearchRanking, PagedResult<RankingDto>>("runs")
+                        .Get<SearchRanking, PagedResult<RunRankingDto>>("runs")
                         .Post<CreateRun>("runs",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"runs/{cmd.RunId}"))))
                 .UseLogging()
