@@ -25,6 +25,7 @@ namespace Services.Run.Api
             => await CreateWebHostBuilder(args)
                 .Build()
                 .RunAsync();
+
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
             => WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices(services => services
@@ -41,7 +42,6 @@ namespace Services.Run.Api
                         .Get<SearchRanking, PagedResult<RunRankingDto>>("runs")
                         .Post<CreateRun>("runs",
                             afterDispatch: (cmd, ctx) => ctx.Response.Created($"runs/{cmd.RunId}"))))
-                .UseLogging()
-                .UseVault();
+                .UseLogging();
     }
 }
