@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Convey;
-using Convey.CQRS.Commands;
-using Convey.CQRS.Events;
 using Convey.CQRS.Queries;
 using Convey.Discovery.Consul;
 using Convey.Docs.Swagger;
@@ -15,10 +13,8 @@ using Convey.MessageBrokers.CQRS;
 using Convey.MessageBrokers.Outbox;
 using Convey.MessageBrokers.Outbox.Mongo;
 using Convey.MessageBrokers.RabbitMQ;
-using Convey.Metrics.AppMetrics;
 using Convey.Persistence.MongoDB;
 using Convey.Persistence.Redis;
-using Convey.Security;
 using Convey.Tracing.Jaeger;
 using Convey.Tracing.Jaeger.RabbitMQ;
 using Convey.WebApi;
@@ -35,7 +31,6 @@ using Services.Run.Application.Services;
 using Services.Run.Application.Services.Route;
 using Services.Run.Core.Repositories;
 using Services.Run.Infrastructure.Contexts;
-using Services.Run.Infrastructure.Decorators;
 using Services.Run.Infrastructure.Exceptions;
 using Services.Run.Infrastructure.Logging;
 using Services.Run.Infrastructure.Mongo.Documents;
@@ -59,9 +54,7 @@ namespace Services.Run.Infrastructure
             builder.Services.AddSingleton<IDistanceMeasure, DistanceMesure>();
             builder.Services.AddTransient<IAppContextFactory, AppContextFactory>();
             builder.Services.AddTransient(ctx => ctx.GetRequiredService<IAppContextFactory>().Create());
-            builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
-            builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
-            
+
             return builder
                 .AddErrorHandler<ExceptionToResponseMapper>()
                 .AddQueryHandlers()
@@ -74,13 +67,11 @@ namespace Services.Run.Infrastructure
                 .AddExceptionToMessageMapper<ExceptionToMessageMapper>()
                 .AddMongo()
                 .AddRedis()
-                .AddMetrics()
                 .AddJaeger()
                 .AddHandlersLogging()
                 .AddMongoRepository<UserDocument, Guid>("users")
                 .AddMongoRepository<RunDocument, Guid>("runs")
-                .AddWebApiSwaggerDocs()
-                .AddSecurity();
+                .AddWebApiSwaggerDocs();
         }
 
         public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
@@ -90,7 +81,6 @@ namespace Services.Run.Infrastructure
                 .UseJaeger()
                 .UseConvey()
                 .UsePublicContracts<ContractAttribute>()
-                .UseMetrics()
                 .UseRabbitMq()
                 .SubscribeCommand<CreateRun>()
                 .SubscribeEvent<UserCreated>()
